@@ -10,12 +10,49 @@ class App extends Component {
         };
 
         // this.handleChange = this.handleChange.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(e) {
         this.setState({
             name: e.target.value
         });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        axios.post('/tasks', {
+            name: this.state.name
+        })
+        .then(response => {
+            this.setState({
+                tasks: [...this.state.tasks, response.data],
+                name: ''
+            });
+        });
+    }
+
+    renderTasks = () => {
+        return this.state.tasks.map(task => (
+           <div key={task.id} className="media">
+               <div className="media-body">
+                   <div>
+                       {task.name}
+                   </div>
+               </div>
+           </div>
+        ));
+    };
+
+    getTasks = () => {
+        axios.get('/tasks').then(response => this.setState({
+            tasks: [...response.data.tasks]
+        }));
+    };
+
+    componentWillMount() {
+        this.getTasks();
     }
 
     render() {
@@ -27,7 +64,7 @@ class App extends Component {
                             <div className="card-header">React Component</div>
 
                             <div className="card-body">
-                                <form>
+                                <form onSubmit={e => this.handleSubmit(e)}>
                                     <div className="form-group">
                                         <textarea
                                             onChange={e => this.handleChange(e)}
@@ -43,6 +80,10 @@ class App extends Component {
                                         Create Task
                                     </button>
                                 </form>
+
+                                <hr/>
+
+                                {this.renderTasks()}
                             </div>
                         </div>
                     </div>
