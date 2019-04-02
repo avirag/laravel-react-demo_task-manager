@@ -12,4 +12,6 @@ $ npm run watch
 
 $ php artisan make:auth
 $ php artisan migrate
+
+$ php artisan make:model Task -m
 ```
