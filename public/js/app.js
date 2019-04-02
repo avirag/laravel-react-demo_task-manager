@@ -61376,15 +61376,32 @@ var App =
 function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
+    var _this;
+
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(App).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
+    _this.state = {
+      name: '',
+      tasks: []
+    }; // this.handleChange = this.handleChange.bind(this);
+
+    return _this;
   }
 
   _createClass(App, [{
+    key: "handleChange",
+    value: function handleChange(e) {
+      this.setState({
+        name: e.target.value
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -61397,7 +61414,22 @@ function (_Component) {
         className: "card-header"
       }, "React Component"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
-      }, "I'm a react component!")))));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+        onChange: function onChange(e) {
+          return _this2.handleChange(e);
+        },
+        value: this.state.name,
+        className: "form-control",
+        rows: "5",
+        maxLength: "255",
+        placeholder: "Create a new task",
+        required: true
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "submit",
+        className: "btn btn-primary"
+      }, "Create Task")))))));
     }
   }]);
 
