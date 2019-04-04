@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-class App extends Component {
+class TaskEdit extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-          name: '',
-          tasks: []
+            name: '',
+            task: []
         };
-
-        // this.handleChange = this.handleChange.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(e) {
@@ -23,55 +20,24 @@ class App extends Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        axios.post('/tasks', {
+        axios.put(`/tasks/${this.props.match.params.id}`, {
             name: this.state.name
         })
         .then(response => {
-            this.setState({
-                tasks: [...this.state.tasks, response.data],
-                name: ''
-            });
+            this.props.history.push('/');
         });
     }
 
-    renderTasks = () => {
-        return this.state.tasks.map(task => (
-           <div key={task.id} className="media">
-               <div className="media-body">
-                   <div>
-                       {task.name}{' '}
-                       <span className="text-muted">
-                           <br/>
-                           by {task.user.name} | {task.updated_at.split(' ').slice(1).join(' ')}
-                       </span>
-                       <Link to={`/${task.id}/edit`} className="btn btn-sm btn-success float-right">Update</Link>
-                       <button className="btn btn-sm btn-warning float-right" onClick={() => this.handleDelete(task.id)}>Delete</button>
-                   </div>
-                   <hr/>
-               </div>
-           </div>
-        ));
-    };
-
-    getTasks = () => {
-        axios.get('/tasks').then(response => this.setState({
-            tasks: [...response.data.tasks]
+    getTask = () => {
+        axios.get(`/tasks/${this.props.match.params.id}/edit`).then(response => this.setState({
+            task: response.data.task,
+            name: response.data.task.name
         }));
     };
 
     componentWillMount() {
-        this.getTasks();
+        this.getTask();
     }
-
-    handleDelete = id => {
-        const isNotId = task => task.id !== id;
-        const updatedTasks = this.state.tasks.filter(isNotId);
-        this.setState({
-            tasks: updatedTasks
-        });
-
-        axios.delete(`/tasks/${id}`);
-    };
 
     render() {
         return (
@@ -79,7 +45,7 @@ class App extends Component {
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="card">
-                            <div className="card-header">Task Create</div>
+                            <div className="card-header">Edit Task</div>
 
                             <div className="card-body">
                                 <form onSubmit={e => this.handleSubmit(e)}>
@@ -98,10 +64,6 @@ class App extends Component {
                                         Create Task
                                     </button>
                                 </form>
-
-                                <hr/>
-
-                                {this.renderTasks()}
                             </div>
                         </div>
                     </div>
@@ -112,4 +74,4 @@ class App extends Component {
 }
 
 
-export default App;
+export default TaskEdit;
